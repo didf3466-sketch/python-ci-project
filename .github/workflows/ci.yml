@@ -1,4 +1,4 @@
-name: Python CI
+name: Python CI/CD
 
 on:
   push:
@@ -9,20 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - uses: actions/setup-python@v4
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
         python-version: "3.11"
 
-    - name: Install
+    - name: Install dependencies
       run: |
-        pip install pytest flake8
+        pip install -r requirements.txt
 
-    - name: Lint
+    - name: Lint (flake8)
       run: |
         flake8 .
 
-    - name: Test
+    - name: Run tests
       run: |
         pytest
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-python-app .
